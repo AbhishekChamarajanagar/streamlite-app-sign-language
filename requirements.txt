@@ -2,4 +2,4 @@ streamlit
 opencv-python-headless
 mediapipe
 numpy
-scikit-learn  # Needed for your pickle model
+scikit-learn  # Required for loading pickle model
