@@ -12,7 +12,6 @@ model = model_dict['model']
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-
 hands = mp_hands.Hands(static_image_mode=False, min_detection_confidence=0.3)
 
 # Label dictionary for predictions
@@ -53,19 +52,18 @@ def process_frame(img):
 
 # Streamlit UI
 st.title("Hand Gesture Recognition using Streamlit")
-st.write("Show a hand gesture, and the app will predict the character!")
+st.write("Upload an image of a hand gesture, and the app will predict the character!")
 
-# OpenCV Video Capture
-cap = cv2.VideoCapture(0)
-stframe = st.empty()
+# Capture image using Streamlit's built-in camera input
+uploaded_image = st.camera_input("Take a picture")
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        st.write("Failed to capture frame. Exiting...")
-        break
-    processed_frame = process_frame(frame)
-    stframe.image(processed_frame, channels="BGR")
+if uploaded_image:
+    # Convert to OpenCV format
+    file_bytes = np.asarray(bytearray(uploaded_image.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, 1)
 
-cap.release()
-cv2.destroyAllWindows()
+    # Process the image
+    processed_frame = process_frame(img)
+
+    # Display the processed image
+    st.image(processed_frame, channels="BGR", caption="Processed Image")
